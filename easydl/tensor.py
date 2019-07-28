@@ -1,21 +1,16 @@
 from __future__ import annotations
 import numpy as np
-from typing import Union, List
-from .abstract_node import AbstractNode
+from typing import Union
 from .abstract_tensor import AbstractTensor
 from .nodes import Add, Substract, Multiply, Divide, Power
-from .constant import Constant
-from .util.input_check import check_equal_shape, check_can_broad_cast
-from .node import Node
+from easydl.variables.constant import Constant
+from .util.input_check import check_equal_shape
 
 
 class tensor(AbstractTensor):
 
     def __init__(self, arr: np.ndarray, needs_gradient: bool = True):
         super().__init__(arr, needs_gradient)
-
-        if Node.tensor_obj is None:
-            Node.tensor_obj = tensor
 
     def base_op_two_args(self, op, other: Union[float, tensor], tmp_first: bool = False):
         if isinstance(other, float):

@@ -16,8 +16,8 @@ class Substract(Node):
         check_arg_number(inputs, 2, self)
 
     def forward(self, inputs: Union[np.ndarray, List[np.ndarray]]):
-        return self.np.add(inputs[0], -inputs[1])
+        return self.np.add(inputs[0], -inputs[1]), None
 
-    def backward(self, gradients: np.ndarray, inputs: Union[np.ndarray, List[np.ndarray]]):
+    def backward(self, gradients: np.ndarray, cache: Union[np.ndarray, List[np.ndarray]]):
         return gradients, -gradients
 

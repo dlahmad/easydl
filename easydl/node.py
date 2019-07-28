@@ -3,10 +3,7 @@ from typing import Union, List, Dict, Tuple
 from .abstract_node import AbstractNode
 from .abstract_tensor import AbstractTensor
 from .instance import Instance
-#from .nodes.constant import Constant
-#from .nodes.add import Add
-import easydl.nodes as nodes
-import sys, inspect
+from numba import jit
 
 
 class Node(AbstractNode):
@@ -16,8 +13,8 @@ class Node(AbstractNode):
     def __init__(self):
         super().__init__()
         self.variables: Dict[str, np.ndarray] = {}
+        self.gradients: Dict[str, np.ndarray] = {}
         self.instances: Dict[AbstractTensor, Instance] = {}
-        self.node_type_dict = {}
 
     def __call__(self, args: Union[AbstractTensor, List[AbstractTensor]]):
         if not self.built:
@@ -28,8 +25,9 @@ class Node(AbstractNode):
 
         self.input_check(numpy_inputs)
 
-        numpy_output = self.forward(numpy_inputs)
+        numpy_output, cache = self.forward(numpy_inputs)
         output = self._numpy2tensor(numpy_output)
+        self.cache = cache
 
         instance = Instance(inputs, output)
         self.instances[output] = instance
@@ -47,8 +45,9 @@ class Node(AbstractNode):
             new_level_grads = {}
 
             for instance in level:
-                numpy_inputs = list(map(self._tensor2numpy, instance.input_tensors))
-                input_grads = instance.output_tensor.origin.backward(level_grads[instance.output_tensor], numpy_inputs)
+                current_node = instance.output_tensor.origin
+                input_grads = current_node.backward(level_grads[instance.output_tensor]
+                                                    , current_node.cache)
 
                 new_level_grads.update(dict(zip(instance.input_tensors, input_grads)))
 

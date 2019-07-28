@@ -18,8 +18,8 @@ class Divide(Node):
         check_equal_shape(inputs, self)
 
     def forward(self, inputs: Union[np.ndarray, List[np.ndarray]]):
-        return self.np.multiply(inputs[0], inputs[1])
+        return self.np.multiply(inputs[0], inputs[1]), inputs
 
-    def backward(self, gradients: np.ndarray, inputs: Union[np.ndarray, List[np.ndarray]]):
-        return gradients * inputs[1], (gradients * -inputs[0])/(np.power(inputs[1], 2) + get_eps())
+    def backward(self, gradients: np.ndarray, cache: Union[np.ndarray, List[np.ndarray]]):
+        return gradients * cache[1], (gradients * -cache[0])/(np.power(cache[1], 2) + get_eps())
 
