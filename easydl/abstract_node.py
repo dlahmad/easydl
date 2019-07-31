@@ -1,13 +1,17 @@
 import numpy as np
 from typing import Union, List, Dict
+from .abstract_object import AbstractObject
 
 
-class AbstractNode:
+class AbstractNode(AbstractObject):
 
     def __init__(self):
-        self.np: np = np
+        super().__init__()
         self.name: Union[str, None] = None
-        self.needs_gradient: bool = True
+        self.needs_gradient: bool = False
+        self.propagates_gradient: bool = False
+        self.needs_init: bool = False
+        self.needs_input_check: bool = False
         self.name: str = self.__class__.__name__
         self.built: bool = False
         self.cache: Union[List[Union[np.ndarray, List[np.ndarray]]], None] = list()

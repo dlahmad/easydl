@@ -5,20 +5,30 @@ from easydl.nodes.multiply import Multiply
 from easydl.nodes.add import Add
 import timeit
 from easydl.optimizer import Optimizer
+from easydl.tape import Tape
+from easydl.nodes.layers.dense import Dense
+from easydl.nodes.activations.sigmoid import Sigmoid
+from easydl.optimizers.sgd import Sgd
 
 
 def test_func():
-    with Optimizer() as opt:
-        a = tensor(2 * np.ones((1, 1)))
-        b = tensor(3 * np.ones((1, 1)))
-        c = tensor(4 * np.ones((1, 1)))
 
-        d = (a + a*b)**2 * c
-
-    d.backward()
+    a = tensor(0.5 * np.ones((1, 10)))
+    for i in range(10000):
+        with Tape() as tape:
+            d = s(l(a))
+            print(d.numpy)
+        d.backward()
+        optimizer.optimize(tape)
 
 
 edl.init_easydl()
 
-print(timeit.Timer(test_func).timeit(100)/100)
+optimizer = Sgd(learning_rate=0.1)
+
+l = Dense(10, 20)
+s = Sigmoid()
+
+test_func()
+#print(timeit.Timer(test_func).timeit(100)/100)
 #print('grad a: {} grad b: {}'.format(a.grad, b.grad))

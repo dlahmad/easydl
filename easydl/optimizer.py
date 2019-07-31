@@ -1,17 +1,22 @@
+from typing import List, Set, Tuple, Union
+from .tape import Tape
+from .node import Node
+import numpy as np
+from .abstract_object import AbstractObject
 
-class Optimizer:
 
-    current_optimizer = None
+class Optimizer(AbstractObject):
 
-    def __init__(self):
-        self.gradient_dict = {}
+    def optimize(self, tape: Tape):
+        for node in tape.operations:
+            for key in node.variables.keys():
+                var = node.variables[key]
+                grad = node.variables[key]
+                state = node.optimizer_cache[key] if key in node.optimizer_cache else None
 
-    def __enter__(self):
-        if Optimizer.current_optimizer is not None:
-            raise Exception("You can only use one optimizer. Another one"
-                            "is already set")
-        Optimizer.current_optimizer = self
+                node.variables[key], node.optimizer_cache[key] = self.step(var, grad, state)
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        Optimizer.current_optimizer = None
+    def step(self, variable: np.ndarray, gradient: np.ndarray, state: Union[None, np.ndarray])\
+            -> Tuple[np.ndarray, np.ndarray]:
+        pass
 

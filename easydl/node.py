@@ -12,18 +12,22 @@ class Node(AbstractNode):
 
     def __init__(self):
         super().__init__()
+        self.propagates_gradient: bool = True
+        self.needs_input_check: bool = True
         self.variables: Dict[str, np.ndarray] = {}
         self.gradients: Dict[str, np.ndarray] = {}
+        self.optimizer_cache: Dict[str, np.ndarray] = {}
         self.instances: Dict[AbstractTensor, Instance] = {}
 
     def __call__(self, args: Union[AbstractTensor, List[AbstractTensor]]):
-        if not self.built:
+        if self.needs_init and not self.built:
             self.build()
 
         inputs = args
-        numpy_inputs = list(map(self._tensor2numpy, inputs))
+        numpy_inputs = list(map(self._tensor2numpy, inputs)) if isinstance(inputs, list) else self._tensor2numpy(inputs)
 
-        self.input_check(numpy_inputs)
+        if self.needs_input_check:
+            self.input_check(numpy_inputs)
 
         numpy_output, cache = self.forward(numpy_inputs)
         output = self._numpy2tensor(numpy_output)
@@ -46,12 +50,16 @@ class Node(AbstractNode):
 
             for instance in level:
                 current_node = instance.output_tensor.origin
+                input_tensors = instance.input_tensors
                 input_grads = current_node.backward(level_grads[instance.output_tensor]
                                                     , current_node.cache)
+                if not isinstance(input_tensors, list):
+                    input_tensors = list([input_tensors])
+                    input_grads = list([input_grads])
 
-                new_level_grads.update(dict(zip(instance.input_tensors, input_grads)))
+                new_level_grads.update(dict(zip(input_tensors, input_grads)))
 
-                for inp, grad in zip(instance.input_tensors, input_grads):
+                for inp, grad in zip(input_tensors, input_grads):
                     inp.grad += grad
 
             level_grads = new_level_grads
@@ -65,7 +73,10 @@ class Node(AbstractNode):
             current_level = []
 
             for instance in hierarchy[level]:
-                for input_tensor in instance.input_tensors:
+                input_tensors = instance.input_tensors
+                if not isinstance(input_tensors, list):
+                    input_tensors = list([input_tensors])
+                for input_tensor in input_tensors:
                     if input_tensor.origin:
                         current_level.append(input_tensor.origin.instances[input_tensor])
             level += 1
