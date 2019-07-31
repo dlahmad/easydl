@@ -2,11 +2,13 @@ from __future__ import annotations
 import numpy as np
 from typing import Union, List, Tuple
 from .abstract_node import AbstractNode
+from .abstract_object import AbstractObject
 
 
-class AbstractTensor:
+class AbstractTensor(AbstractObject):
 
     def __init__(self, arr: np.ndarray, needs_gradient: bool = True):
+        super().__init__()
         self.numpy: np.ndarray = arr
         self.shape: Tuple[int] = self.numpy.shape
         self.origin: Union[AbstractNode, None] = None
