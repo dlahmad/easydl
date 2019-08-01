@@ -16,7 +16,9 @@ class Layer(Node):
         self.needs_init: bool = True
 
     def init_variable(self, *shape: int) -> np.ndarray:
-        return self.initializer.init_variable(list(shape))
+        init = self.initializer.init_variable(list(shape))
+        init /= init.size
+        return init
 
     def __call__(self, args: Union[AbstractTensor, List[AbstractTensor]]):
         if self.needs_gradient:

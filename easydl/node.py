@@ -22,6 +22,7 @@ class Node(AbstractNode):
     def __call__(self, args: Union[AbstractTensor, List[AbstractTensor]]):
         if self.needs_init and not self.built:
             self.build()
+            self.built = True
 
         inputs = args
         numpy_inputs = list(map(self._tensor2numpy, inputs)) if isinstance(inputs, list) else self._tensor2numpy(inputs)

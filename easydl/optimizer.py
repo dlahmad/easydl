@@ -11,7 +11,7 @@ class Optimizer(AbstractObject):
         for node in tape.operations:
             for key in node.variables.keys():
                 var = node.variables[key]
-                grad = node.variables[key]
+                grad = node.gradients[key]
                 state = node.optimizer_cache[key] if key in node.optimizer_cache else None
 
                 node.variables[key], node.optimizer_cache[key] = self.step(var, grad, state)
