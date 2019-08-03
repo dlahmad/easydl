@@ -32,9 +32,8 @@ class Node(AbstractNode):
 
         numpy_output, cache = self.forward(numpy_inputs)
         output = self._numpy2tensor(numpy_output)
-        self.cache = cache
 
-        instance = Instance(inputs, output)
+        instance = Instance(inputs, output, cache)
         self.instances[output] = instance
 
         return output
@@ -53,7 +52,7 @@ class Node(AbstractNode):
                 current_node = instance.output_tensor.origin
                 input_tensors = instance.input_tensors
                 input_grads = current_node.backward(level_grads[instance.output_tensor]
-                                                    , current_node.cache)
+                                                    , instance.cache)
                 if not isinstance(input_tensors, list):
                     input_tensors = list([input_tensors])
                     input_grads = list([input_grads])

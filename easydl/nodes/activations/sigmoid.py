@@ -10,7 +10,7 @@ class Sigmoid(Activation):
         check_arg_number(inputs, 1)
 
     def forward(self, inputs: Union[np.ndarray, List[np.ndarray]]):
-        res = self.np.exp(-inputs)
+        res = 1. / (1+ self.np.exp(-inputs))
 
         return res, res
 
