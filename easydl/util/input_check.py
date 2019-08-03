@@ -8,7 +8,8 @@ import functools
 
 def check_arg_number(inputs: Union[np.ndarray, List[np.ndarray], Tuple[np.ndarray]],
                      arg_number: int, origin: Node = None):
-    if not isinstance(inputs, collections.Iterable) or not len(inputs) == arg_number:
+    if isinstance(inputs, (list, tuple)) and not len(inputs) == arg_number\
+            or not isinstance(inputs, (list, tuple)) and not arg_number == 1:
         if origin:
             message = 'The node "{}" needs exactly {} inputs!'.format(origin.name, arg_number)
         else:

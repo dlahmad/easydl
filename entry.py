@@ -14,10 +14,9 @@ import matplotlib.pyplot as plt
 import imageio
 from numba import jit
 
-
 def test_func():
-    target = tensor(0.2 * np.ones((1, 10)))
-    a = tensor(0.5 * np.ones((1, 10)))
+    target = tensor(0.2 * np.ones((2, 10)))
+    a = tensor(0.5 * np.ones((2, 10)))
     for i in range(100000):
         with Tape() as tape:
             d = s(l(a))
@@ -30,12 +29,14 @@ def test_func():
 
 
 edl.init_easydl()
-optimizer = Sgd(learning_rate=0.001)
+optimizer = Sgd(learning_rate=0.01)
 
 l = Dense(10, 10)
 l2 = Dense(20, 10)
 s = Sigmoid()
 mse = MSE()
+
+#data = dataset.MNIST('./datasets/mnist', download=True)
 
 test_func()
 print()

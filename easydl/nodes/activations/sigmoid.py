@@ -10,11 +10,11 @@ class Sigmoid(Activation):
         check_arg_number(inputs, 1)
 
     def forward(self, inputs: Union[np.ndarray, List[np.ndarray]]):
-        res = 1. / (1+ self.np.exp(-inputs))
+        res = 1. / (1 + self.np.exp(-inputs))
 
         return res, res
 
     def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]]):
         res = cache
-        return res * (1 - res)
+        return gradients * res * (1 - res)
 

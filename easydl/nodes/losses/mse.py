@@ -22,6 +22,8 @@ class MSE(Loss):
     def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]]):
         difference = cache
         size = difference.size
+        expand_shape = (1, ) * (difference.ndim-1)
+        gradients = gradients.reshape((-1,) + expand_shape)
 
         scaled_difference = 2*gradients/size * difference
 
