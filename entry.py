@@ -1,3 +1,6 @@
+import torch
+import torch.nn as nn
+import torchvision.datasets as dataset
 import numpy as np
 import easydl as edl
 from easydl.tensor import tensor
@@ -8,35 +11,66 @@ from easydl.optimizer import Optimizer
 from easydl.tape import Tape
 from easydl.nodes.layers import Dense
 from easydl.nodes.losses import MSE
-from easydl.nodes.activations import Sigmoid, Softmax
+from easydl.nodes.activations import Sigmoid, Softmax, ReLu
 from easydl.optimizers.sgd import Sgd
 import matplotlib.pyplot as plt
-import imageio
-from numba import jit
 
-def test_func():
-    target = tensor(0.2 * np.ones((2, 10)))
-    a = tensor(0.5 * np.ones((2, 10)))
-    for i in range(100000):
-        with Tape() as tape:
-            d = s(l(a))
 
-            r = mse([d, target])
-            print(r.numpy)
+def eval_func(data, label):
+    batch_size = 1
+    counter = 0.0
+    correct = 0.0
+    for i in range(0, data.shape[0], batch_size):
+        target = tensor(label[i:batch_size + i])
+        source = tensor(data[i:batch_size + i])
+        d = re(l2(re(l(source))))
 
-        r.backward()
-        optimizer.optimize(tape)
+        pred = np.argmax(d.numpy)
+        true_pred = target.numpy.flatten()
+        counter += 1
+        correct += (pred == true_pred)
+
+    print(correct/counter)
+
+
+def test_func(data, label):
+
+    for e in range(5):
+        batch_size = 1
+        for i in range(0, data.shape[0], batch_size):
+
+            target = tensor(label[i:batch_size+i])
+            source = tensor(data[i:batch_size+i])
+
+            with Tape() as tape:
+                d = re2(l2(re(l(source))))
+
+                r = mse([d, target])
+                print(np.sum(r.numpy))
+
+            r.backward()
+            optimizer.optimize(tape)
 
 
 edl.init_easydl()
-optimizer = Sgd(learning_rate=0.01)
+optimizer = Sgd(learning_rate=0.001)
 
-l = Dense(10, 10)
-l2 = Dense(20, 10)
+l = Dense(784, 128)
+l2 = Dense(128, 10)
+re = ReLu()
+re2 = ReLu()
 s = Sigmoid()
+so = Softmax()
 mse = MSE()
 
-#data = dataset.MNIST('./datasets/mnist', download=True)
+data_set = dataset.MNIST('./datasets/mnist', download=True)
+data = data_set.train_data.numpy()
+data = np.reshape(data, (data.shape[0], -1)) / 255.
+label = data_set.train_labels.numpy()
+label_raw = np.zeros((label.shape[0], 10))
+label_raw[np.arange(label.shape[0]), label] = 1
+test_func(data[:5000], label_raw[:5000])
+eval_func(data[:1000], label[:1000])
 
-test_func()
+
 print()

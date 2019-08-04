@@ -16,5 +16,5 @@ class Sigmoid(Activation):
 
     def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]]):
         res = cache
-        return gradients * res * (1 - res)
+        return np.multiply(gradients, np.multiply(res, (1 - res)))
 

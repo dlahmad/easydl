@@ -6,4 +6,4 @@ from typing import Union, Tuple, List
 class RandomUniform(Initializer):
 
     def init_variable(self, size: List[int]) -> np.ndarray:
-        return np.random.rand(*size)
+        return np.random.rand(*size) - 0.5
