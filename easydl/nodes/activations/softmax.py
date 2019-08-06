@@ -31,8 +31,8 @@ class Softmax(Activation):
         d_y_d_f = gradients / (exp + self.eps)
         d_y_d_x = d_y_d_f
 
-        d_y_d_g = np.dot(exp + gradients, -np.ones((sm.shape[1], 1))) / (np.power(exp_sum, 2) + self.eps)
-        d_y_d_h = np.dot(d_y_d_g, np.ones((1, exp.shape[1])))
+        d_y_d_g = self.np.dot(exp + gradients, -self.np.ones((sm.shape[1], 1))) / (self.np.power(exp_sum, 2) + self.eps)
+        d_y_d_h = self.np.dot(d_y_d_g, self.np.ones((1, exp.shape[1])))
         d_h_d_x = d_y_d_h
 
         d_y_d_x = d_y_d_x + d_h_d_x

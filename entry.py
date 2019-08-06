@@ -13,6 +13,7 @@ from easydl.nodes.layers import Dense
 from easydl.nodes.losses import MSE
 from easydl.nodes.activations import Sigmoid, Softmax, ReLu
 from easydl.optimizers.sgd import Sgd
+from easydl.config import Config
 import matplotlib.pyplot as plt
 
 
@@ -56,11 +57,10 @@ def test_func(data, label):
             optimizer.optimize(tape)
 
 
-edl.init_easydl()
+edl.init_easydl(True)
 optimizer = Sgd(learning_rate=0.6, momentum=0.1)
 
 l = Dense(784, 128)
-l.build()
 #l.to_gpu()
 l2 = Dense(128, 10)
 re = ReLu()
