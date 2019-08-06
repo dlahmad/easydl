@@ -1,14 +1,15 @@
 import numpy as np
+import gc
 from typing import Union, List, Dict, Tuple
 from .abstract_node import AbstractNode
 from .abstract_tensor import AbstractTensor
 from .instance import Instance
-from numba import jit
+from .config import Config
+from .util.input_check import check_and_return_batch_size
+from .tape import Tape
 
 
 class Node(AbstractNode):
-
-    tensor_obj = None
 
     def __init__(self):
         super().__init__()
@@ -18,27 +19,31 @@ class Node(AbstractNode):
         self.gradients: Dict[str, np.ndarray] = {}
         self.optimizer_cache: Dict[str, np.ndarray] = {}
         self.instances: Dict[AbstractTensor, Instance] = {}
+        self.tensor_obj = Config.tensor_obj
 
     def __call__(self, args: Union[AbstractTensor, List[AbstractTensor]]):
         if self.needs_init and not self.built:
             self.build()
             self.built = True
 
-        inputs = args
-        numpy_inputs = list(map(self._tensor2numpy, inputs)) if isinstance(inputs, list) else self._tensor2numpy(inputs)
+        inputs = self._to_list(args)
+        batch_size = check_and_return_batch_size(inputs)
+        numpy_inputs = list(map(self._tensor2numpy, inputs))
 
         if self.needs_input_check:
             self.input_check(numpy_inputs)
 
-        numpy_output, cache = self.forward(numpy_inputs)
+        numpy_output, cache = self.forward(numpy_inputs, batch_size)
         output = self._numpy2tensor(numpy_output)
 
-        instance = Instance(inputs, output, cache)
+        instance = Instance(inputs, output, cache, batch_size)
         self.instances[output] = instance
+
+        Tape.add_node((self, instance), self.needs_gradient)
 
         return output
 
-    def _internal_backward(self, output_tensor: AbstractTensor, gradients: np.ndarray) -> None:
+    def raw_backward(self, output_tensor: AbstractTensor, gradients: np.ndarray) -> None:
         base_instance = self.instances[output_tensor]
         graph = self._build_dynamic_graph(base_instance)
 
@@ -52,15 +57,12 @@ class Node(AbstractNode):
                 current_node = instance.output_tensor.origin
                 input_tensors = instance.input_tensors
                 input_grads = current_node.backward(level_grads[instance.output_tensor]
-                                                    , instance.cache)
-                if not isinstance(input_tensors, list):
-                    input_tensors = list([input_tensors])
+                                                    , instance.cache, instance.batch_size)
+                if not isinstance(input_grads, (list, tuple)):
                     input_grads = list([input_grads])
 
-                new_level_grads.update(dict(zip(input_tensors, input_grads)))
-
                 for inp, grad in zip(input_tensors, input_grads):
-                    inp.grad += grad
+                    new_level_grads[inp] = grad
 
             level_grads = new_level_grads
 
@@ -78,7 +80,8 @@ class Node(AbstractNode):
                     input_tensors = list([input_tensors])
                 for input_tensor in input_tensors:
                     if input_tensor.origin:
-                        current_level.append(input_tensor.origin.instances[input_tensor])
+                        origin_instance = input_tensor.origin.instances[input_tensor]
+                        current_level.append(origin_instance)
             level += 1
             hierarchy[level] = current_level
 
@@ -100,3 +103,14 @@ class Node(AbstractNode):
             tns.register_origin(self)
 
         return tns
+
+    @staticmethod
+    def _to_list(var):
+        if not isinstance(var, list):
+            return [var]
+        return var
+
+
+
+
+

@@ -16,9 +16,9 @@ class Power(Node):
     def input_check(self, inputs: np.ndarray) -> None:
         check_arg_number(inputs, 1, self)
 
-    def forward(self, inputs: np.ndarray):
-        return self.np.power(inputs, self.power)[0], inputs
+    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int):
+        return self.np.power(inputs[0], self.power)[0], inputs[0]
 
-    def backward(self, gradients: np.ndarray, cache: np.ndarray):
+    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size):
         return gradients * self.power * cache
 

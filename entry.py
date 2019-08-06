@@ -35,15 +35,19 @@ def eval_func(data, label):
 
 def test_func(data, label):
 
-    for e in range(5):
-        batch_size = 1
+    for e in range(30):
+        batch_size = 4
         for i in range(0, data.shape[0], batch_size):
 
             target = tensor(label[i:batch_size+i])
             source = tensor(data[i:batch_size+i])
 
             with Tape() as tape:
-                d = re2(l2(re(l(source))))
+                d = s(l2(re(l(source))))
+
+                # d.to_gpu()
+                # target.to_gpu()
+                # mse.to_gpu()
 
                 r = mse([d, target])
                 print(np.sum(r.numpy))
@@ -53,9 +57,11 @@ def test_func(data, label):
 
 
 edl.init_easydl()
-optimizer = Sgd(learning_rate=0.001)
+optimizer = Sgd(learning_rate=0.6, momentum=0.1)
 
 l = Dense(784, 128)
+l.build()
+#l.to_gpu()
 l2 = Dense(128, 10)
 re = ReLu()
 re2 = ReLu()

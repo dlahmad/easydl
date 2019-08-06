@@ -20,8 +20,5 @@ class Layer(Node):
         init /= init.size
         return init
 
-    def __call__(self, args: Union[AbstractTensor, List[AbstractTensor]]):
-        if self.needs_gradient:
-            Tape.add_node(self)
-        return super().__call__(args)
+
 

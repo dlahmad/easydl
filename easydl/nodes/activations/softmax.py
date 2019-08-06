@@ -14,10 +14,10 @@ class Softmax(Activation):
     def input_check(self, inputs: Union[np.ndarray, List[np.ndarray]]) -> None:
         check_arg_number(inputs, 1)
 
-    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]]):
+    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int):
 
         # inputs x
-        exp = self.np.exp(inputs)  # f
+        exp = self.np.exp(inputs[0])  # f
 
         exp_sum = (self.np.sum(exp, 1) + self.eps).reshape((-1, 1))  # g and h=exp
 
@@ -25,7 +25,7 @@ class Softmax(Activation):
 
         return sm, (exp, exp_sum, sm)
 
-    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]]):
+    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size):
         exp, exp_sum, sm = cache
 
         d_y_d_f = gradients / (exp + self.eps)

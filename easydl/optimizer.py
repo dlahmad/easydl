@@ -3,12 +3,13 @@ from .tape import Tape
 from .node import Node
 import numpy as np
 from .abstract_object import AbstractObject
+from .instance import Instance
 
 
 class Optimizer(AbstractObject):
 
     def optimize(self, tape: Tape):
-        for node in tape.operations:
+        for node, instance in tape.gradient_operations:
             for key in node.variables.keys():
                 var = node.variables[key]
                 grad = node.gradients[key]

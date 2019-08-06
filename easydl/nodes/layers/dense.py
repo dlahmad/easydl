@@ -16,14 +16,14 @@ class Dense(Layer):
         self.variables['w'] = self.init_variable(self.input_dim, self.output_dim)
         self.variables['b'] = self.init_variable(self.output_dim)
 
-    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]]):
-        return self.np.dot(inputs, self.variables['w']) + self.variables['b'], inputs
+    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int):
+        return self.np.dot(inputs[0], self.variables['w']) + self.variables['b'], inputs[0]
 
-    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]]):
+    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size):
         inp = cache
         propagating_gradient = self.np.dot(gradients, self.variables['w'].T)
-        self.gradients['w'] = self.np.dot(inp.T, gradients)
-        self.gradients['b'] = gradients
+        self.gradients['w'] = self.np.dot(inp.T, gradients) / batch_size
+        self.gradients['b'] = np.sum(gradients, axis=0) / batch_size
 
         return propagating_gradient
 

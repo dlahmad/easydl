@@ -21,13 +21,13 @@ class AbstractNode(AbstractObject):
     def build(self) -> None:
         pass
 
-    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]]):
+    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int):
         pass
 
-    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]]):
+    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size):
         pass
 
-    def _internal_backward(self, output_tensor, gradients: np.ndarray):
+    def raw_backward(self, output_tensor: object, gradients: np.ndarray) -> None:
         pass
 
 

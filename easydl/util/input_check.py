@@ -1,13 +1,13 @@
 from typing import List, Union, Tuple
 import numpy as np
-from ..node import Node
+from ..abstract_node import AbstractNode
 import collections
 from .array import can_broadcast
 import functools
 
 
 def check_arg_number(inputs: Union[np.ndarray, List[np.ndarray], Tuple[np.ndarray]],
-                     arg_number: int, origin: Node = None):
+                     arg_number: int, origin: AbstractNode = None):
     if isinstance(inputs, (list, tuple)) and not len(inputs) == arg_number\
             or not isinstance(inputs, (list, tuple)) and not arg_number == 1:
         if origin:
@@ -18,7 +18,7 @@ def check_arg_number(inputs: Union[np.ndarray, List[np.ndarray], Tuple[np.ndarra
         raise Exception(message)
 
 
-def check_arg_shape(inp: np.ndarray, shape: Tuple[int], origin: Node = None):
+def check_arg_shape(inp: np.ndarray, shape: Tuple[int], origin: AbstractNode = None):
     if not inp.shape == shape:
         if origin:
             message = 'The node "{}" expected tensor with shape {} but got shape {}!'\
@@ -30,7 +30,17 @@ def check_arg_shape(inp: np.ndarray, shape: Tuple[int], origin: Node = None):
         raise Exception(message)
 
 
-def check_equal_shape(inputs: List[np.ndarray], origin: Node = None):
+def check_and_return_batch_size(inp: List[np.ndarray]):
+    ref_size = inp[0].shape[0]
+
+    for arr in inp:
+        if ref_size != arr.shape[0]:
+            raise Exception('The batch size of the inputs is not consistent!')
+
+    return ref_size
+
+
+def check_equal_shape(inputs: List[np.ndarray], origin: AbstractNode = None):
     reference_shape = inputs[0].shape
 
     for inp in inputs:

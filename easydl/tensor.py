@@ -9,8 +9,8 @@ from .util.input_check import check_equal_shape
 
 class tensor(AbstractTensor):
 
-    def __init__(self, arr: np.ndarray, needs_gradient: bool = True):
-        super().__init__(arr, needs_gradient)
+    def __init__(self, arr: np.ndarray):
+        super().__init__(arr)
 
     def base_op_two_args(self, op, other: Union[float, tensor], tmp_first: bool = False):
         if isinstance(other, float):
