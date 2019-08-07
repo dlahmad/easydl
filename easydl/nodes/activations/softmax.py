@@ -19,7 +19,7 @@ class Softmax(Activation):
 
         inp = inputs[0]
         input_size = inp.shape[1]
-        v_max = np.max(inp)
+        v_max = self.np.max(inp)
         add_ones = self.np.ones((input_size, 1))
 
         exp = self.np.exp(inp - v_max)  # f
