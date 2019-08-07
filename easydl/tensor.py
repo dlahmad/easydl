@@ -3,7 +3,7 @@ import numpy as np
 from typing import Union
 from .abstract_tensor import AbstractTensor
 from .nodes.operations import Add, Substract, Multiply, Divide, Power
-from easydl.variables.constant import Constant
+from .nodes.constant import Constant
 from .util.input_check import check_equal_shape
 
 
@@ -14,7 +14,7 @@ class tensor(AbstractTensor):
 
     def base_op_two_args(self, op, other: Union[float, tensor], tmp_first: bool = False):
         if isinstance(other, (float, int)):
-            constant = np.ones_like(self.numpy) * other
+            constant = self.np.ones_like(self.numpy) * other
             tmp_tensor = Constant(constant)
         else:
             check_equal_shape([other.numpy, self.numpy])

@@ -16,7 +16,7 @@ def eval_func(data, label):
     for i in range(0, data.shape[0], batch_size):
         target = tensor(label[i:batch_size + i])
         source = tensor(data[i:batch_size + i])
-        d = re(l2(re(l(source))))
+        d = so(l2(re(l(source))))
 
         pred = np.argmax(d.numpy)
         true_pred = target.numpy.flatten()
@@ -28,29 +28,29 @@ def eval_func(data, label):
 
 def test_func(data, label):
 
-    for e in range(30):
+    for e in range(5):
         batch_size = 4
         for i in range(0, data.shape[0], batch_size):
 
             target = tensor(label[i:batch_size+i])
             source = tensor(data[i:batch_size+i])
 
-            #with Tape() as tape:
-            d = s(l2(re(l(source))))
+            with Tape() as tape:
+                d = so(l2(re(l(source))))
 
-            # d.to_gpu()
-            # target.to_gpu()
-            # mse.to_gpu()
+                # d.to_gpu()
+                # target.to_gpu()
+                # mse.to_gpu()
 
-            r = mse([d, target])
-            print(np.sum(r.numpy))
+                r = mse([d, target])
+                print(np.sum(r.numpy))
 
             r.backward()
-            #optimizer.optimize(tape)
+            optimizer.optimize(tape)
 
 
 edl.init_easydl(True)
-optimizer = Sgd(learning_rate=0.6, momentum=0.1)
+optimizer = Sgd(learning_rate=0.03, momentum=0.1)
 
 l = Dense(784, 128)
 #l.to_gpu()

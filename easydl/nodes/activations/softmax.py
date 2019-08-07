@@ -15,25 +15,27 @@ class Softmax(Activation):
         check_arg_number(inputs, 1)
 
     def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int):
-
         # inputs x
+
+        input_size = inputs[0].shape[1]
+        add_ones = self.np.ones((input_size, 1))
+
         exp = self.np.exp(inputs[0])  # f
 
-        exp_sum = (self.np.sum(exp, 1) + self.eps).reshape((-1, 1))  # g and h=exp
+        exp_sum = (np.dot(exp, add_ones) + self.eps).reshape((-1, 1))  # g and h=exp
 
         sm = exp / exp_sum  # y
 
-        return sm, (exp, exp_sum, sm)
+        return sm, (exp, exp_sum, add_ones)
 
     def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size):
-        exp, exp_sum, sm = cache
+        exp, exp_sum, add_ones = cache
 
-        d_y_d_f = gradients / (exp + self.eps)
-        d_y_d_x = d_y_d_f
+        d_y_d_x = self.np.multiply(gradients, exp) / exp_sum
 
-        d_y_d_g = self.np.dot(exp + gradients, -self.np.ones((sm.shape[1], 1))) / (self.np.power(exp_sum, 2) + self.eps)
-        d_y_d_h = self.np.dot(d_y_d_g, self.np.ones((1, exp.shape[1])))
-        d_h_d_x = d_y_d_h
+        d_y_d_g = self.np.dot(self.np.multiply(exp, gradients), -add_ones) / self.np.power(exp_sum, 2)
+        d_y_d_h = self.np.dot(d_y_d_g, add_ones.T)
+        d_h_d_x = self.np.multiply(d_y_d_h, exp)
 
         d_y_d_x = d_y_d_x + d_h_d_x
 
