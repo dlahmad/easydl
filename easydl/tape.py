@@ -13,7 +13,7 @@ class Tape:
         self.gradient_operations: Set[Tuple[AbstractNode, Instance]] = set()
 
     def __enter__(self):
-        if self is Tape.current_optimizer_set:
+        if self in Tape.current_optimizer_set:
             raise Exception("You can only use the same tape once. Please"
                             "leave the 'with' statement of the first usage first.")
         Tape.current_optimizer_set.add(self)
@@ -21,6 +21,10 @@ class Tape:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         Tape.current_optimizer_set.remove(self)
+
+    @staticmethod
+    def tape_active() -> bool:
+        return len(Tape.current_optimizer_set) > 0
 
     @staticmethod
     def add_node(node: Tuple[AbstractNode, Instance], needs_gradient):

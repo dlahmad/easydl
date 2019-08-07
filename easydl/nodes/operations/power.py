@@ -1,7 +1,7 @@
-from ..node import Node
 from typing import Union, List
-from ..util.input_check import check_arg_number, check_arg_shape
 import numpy as np
+from ...node import Node
+from ...util.input_check import check_arg_number, check_arg_shape
 
 
 class Power(Node):

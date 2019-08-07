@@ -36,14 +36,18 @@ class Node(AbstractNode):
         numpy_output, cache = self.forward(numpy_inputs, batch_size)
         output = self._numpy2tensor(numpy_output)
 
-        instance = Instance(inputs, output, cache, batch_size)
-        self.instances[output] = instance
-
-        Tape.add_node((self, instance), self.needs_gradient)
+        if Tape.tape_active():
+            instance = Instance(inputs, output, cache, batch_size)
+            self.instances[output] = instance
+            Tape.add_node((self, instance), self.needs_gradient)
 
         return output
 
     def raw_backward(self, output_tensor: AbstractTensor, gradients: np.ndarray) -> None:
+        if output_tensor not in self.instances:
+            raise Exception('Could not find an instance which created this tensor!'
+                            ' Did you use a tape to record the operations before calling "backwards"?')
+
         base_instance = self.instances[output_tensor]
         graph = self._build_dynamic_graph(base_instance)
 

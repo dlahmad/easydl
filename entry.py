@@ -1,20 +1,12 @@
-import torch
-import torch.nn as nn
 import torchvision.datasets as dataset
 import numpy as np
 import easydl as edl
 from easydl.tensor import tensor
-from easydl.nodes.multiply import Multiply
-from easydl.nodes.add import Add
-import timeit
-from easydl.optimizer import Optimizer
 from easydl.tape import Tape
 from easydl.nodes.layers import Dense
 from easydl.nodes.losses import MSE
 from easydl.nodes.activations import Sigmoid, Softmax, ReLu
 from easydl.optimizers.sgd import Sgd
-from easydl.config import Config
-import matplotlib.pyplot as plt
 
 
 def eval_func(data, label):
@@ -43,18 +35,18 @@ def test_func(data, label):
             target = tensor(label[i:batch_size+i])
             source = tensor(data[i:batch_size+i])
 
-            with Tape() as tape:
-                d = s(l2(re(l(source))))
+            #with Tape() as tape:
+            d = s(l2(re(l(source))))
 
-                # d.to_gpu()
-                # target.to_gpu()
-                # mse.to_gpu()
+            # d.to_gpu()
+            # target.to_gpu()
+            # mse.to_gpu()
 
-                r = mse([d, target])
-                print(np.sum(r.numpy))
+            r = mse([d, target])
+            print(np.sum(r.numpy))
 
             r.backward()
-            optimizer.optimize(tape)
+            #optimizer.optimize(tape)
 
 
 edl.init_easydl(True)
