@@ -17,10 +17,12 @@ class Softmax(Activation):
     def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int):
         # inputs x
 
-        input_size = inputs[0].shape[1]
+        inp = inputs[0]
+        input_size = inp.shape[1]
+        v_max = np.max(inp)
         add_ones = self.np.ones((input_size, 1))
 
-        exp = self.np.exp(inputs[0])  # f
+        exp = self.np.exp(inp - v_max)  # f
 
         exp_sum = (np.dot(exp, add_ones) + self.eps).reshape((-1, 1))  # g and h=exp
 
