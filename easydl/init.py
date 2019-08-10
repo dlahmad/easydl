@@ -1,7 +1,5 @@
-from .tensor import tensor
 from .config import Config
-import numpy as np
-import cupy as cp
+from .tensor import tensor
 
 
 def init_easydl(use_gpu=False):

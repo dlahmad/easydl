@@ -1,2 +1,2 @@
-from .mse import MSE
 from .cesm import CrossEntropySoftmax
+from .mse import MSE

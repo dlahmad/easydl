@@ -1,10 +1,10 @@
-from ..node import Node
-from ..tape import Tape
-from ..tensor import AbstractTensor
+from typing import Union
+
+import numpy as np
+
 from ..initializer import Initializer
 from ..initializers.random_uniform import RandomUniform
-from typing import Union, List, Tuple
-import numpy as np
+from ..node import Node
 
 
 class Layer(Node):

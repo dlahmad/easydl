@@ -1,12 +1,13 @@
+from typing import Union, List, Dict
+
 import numpy as np
-import gc
-from typing import Union, List, Dict, Tuple
+
 from .abstract_node import AbstractNode
 from .abstract_tensor import AbstractTensor
-from .instance import Instance
 from .config import Config
-from .util.input_check import check_and_return_batch_size
+from .instance import Instance
 from .tape import Tape
+from .util.input_check import check_and_return_batch_size
 
 
 class Node(AbstractNode):

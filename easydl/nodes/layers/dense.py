@@ -1,8 +1,9 @@
 from typing import Union, List
+
+import numpy as np
+
 from ..layer import Layer
 from ...initializer import Initializer
-from ...initializers.random_uniform import RandomUniform
-import numpy as np
 
 
 class Dense(Layer):

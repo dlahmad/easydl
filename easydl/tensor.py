@@ -1,8 +1,10 @@
-import numpy as np
 from typing import Union
+
+import numpy as np
+
 from .abstract_tensor import AbstractTensor
-from .nodes.operations import Add, Substract, Multiply, Divide, Power
 from .nodes.constant import Constant
+from .nodes.operations import Add, Substract, Multiply, Divide, Power
 from .util.input_check import check_equal_shape
 
 

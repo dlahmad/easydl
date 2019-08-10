@@ -1,4 +1,5 @@
 from typing import Set, Tuple
+
 from .abstract_node import AbstractNode
 from .instance import Instance
 

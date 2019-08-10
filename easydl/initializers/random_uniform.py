@@ -1,6 +1,8 @@
-from ..initializer import Initializer
+from typing import List
+
 import numpy as np
-from typing import Union, Tuple, List
+
+from ..initializer import Initializer
 
 
 class RandomUniform(Initializer):

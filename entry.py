@@ -1,12 +1,13 @@
-import torchvision.datasets as dataset
 import numpy as np
+import torchvision.datasets as dataset
+
 import easydl as edl
-from easydl.tensor import tensor
-from easydl.tape import Tape
+from easydl.nodes.activations import Sigmoid, Softmax, ReLu
 from easydl.nodes.layers import Dense
 from easydl.nodes.losses import MSE
-from easydl.nodes.activations import Sigmoid, Softmax, ReLu
 from easydl.optimizers.sgd import Sgd
+from easydl.tape import Tape
+from easydl.tensor import tensor
 
 
 def eval_func(data, label):

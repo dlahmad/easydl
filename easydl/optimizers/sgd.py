@@ -1,6 +1,8 @@
-from typing import List, Set, Union, Tuple
-from ..optimizer import Optimizer
+from typing import Union, Tuple
+
 import numpy as np
+
+from ..optimizer import Optimizer
 
 
 class Sgd(Optimizer):

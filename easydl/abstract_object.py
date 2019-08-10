@@ -1,5 +1,6 @@
-import numpy as np
 import cupy as cp
+import numpy as np
+
 from .config import Config
 
 

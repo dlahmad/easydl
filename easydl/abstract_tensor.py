@@ -1,6 +1,8 @@
-import numpy as np
-import cupy as cp
 from typing import Union, List, Tuple
+
+import cupy as cp
+import numpy as np
+
 from .abstract_node import AbstractNode
 from .abstract_object import AbstractObject
 

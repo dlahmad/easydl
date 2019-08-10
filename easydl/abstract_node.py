@@ -1,5 +1,7 @@
+from typing import Union, List
+
 import numpy as np
-from typing import Union, List, Dict
+
 from .abstract_object import AbstractObject
 
 

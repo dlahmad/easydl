@@ -1,7 +1,9 @@
 from typing import Union, List
+
+import numpy as np
+
 from .abstract_object import AbstractObject
 from .abstract_tensor import AbstractTensor
-import numpy as np
 
 
 class Instance(AbstractObject):

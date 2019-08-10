@@ -1,7 +1,9 @@
+from typing import Union, List
+
+import numpy as np
+
 from ..loss import Loss
 from ...util.input_check import check_arg_number, check_equal_shape
-from typing import Union, List
-import numpy as np
 
 
 class CrossEntropySoftmax(Loss):

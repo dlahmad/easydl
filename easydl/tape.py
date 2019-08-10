@@ -1,7 +1,8 @@
 from typing import Set, Tuple
+
 from .abstract_node import AbstractNode
-from .instance import Instance
 from .abstract_tape import AbstractTape
+from .instance import Instance
 
 
 class Tape(AbstractTape):

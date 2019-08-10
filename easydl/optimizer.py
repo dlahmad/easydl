@@ -1,9 +1,9 @@
-from typing import List, Set, Tuple, Union
-from .tape import Tape
-from .node import Node
+from typing import Tuple, Union
+
 import numpy as np
+
 from .abstract_object import AbstractObject
-from .instance import Instance
+from .tape import Tape
 
 
 class Optimizer(AbstractObject):

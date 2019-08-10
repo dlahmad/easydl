@@ -1,6 +1,8 @@
 from typing import Union, List
-from ..activation import Activation
+
 import numpy as np
+
+from ..activation import Activation
 from ...util.input_check import check_arg_number
 from ...util.numerics import get_eps
 

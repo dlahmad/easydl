@@ -1,9 +1,9 @@
 from typing import List, Union, Tuple
+
 import numpy as np
-from ..abstract_node import AbstractNode
-import collections
+
 from .array import can_broadcast
-import functools
+from ..abstract_node import AbstractNode
 
 
 def check_arg_number(inputs: Union[np.ndarray, List[np.ndarray], Tuple[np.ndarray]],

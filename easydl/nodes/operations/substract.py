@@ -1,7 +1,9 @@
 from typing import Union, List
+
 import numpy as np
+
 from ...node import Node
-from ...util.input_check import check_arg_number, check_arg_shape
+from ...util.input_check import check_arg_number
 
 
 class Substract(Node):
