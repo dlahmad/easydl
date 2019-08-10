@@ -67,7 +67,6 @@ class AbstractTensor(AbstractObject):
         of the current tensor and where recorded by a tape. This method is
         resulting in an error if there was no tape recording gradients.
         :param gradient:
-        :return:
         """
         if self.origin is None:
             raise Exception('You can not back propagate a tensor with no origin!')
@@ -80,3 +79,4 @@ class AbstractTensor(AbstractObject):
         else:
             raise Exception('Tensor created from node {} got a gradient with an invalid shape!'
                             .format(self.origin.name))
+

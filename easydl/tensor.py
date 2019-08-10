@@ -20,7 +20,6 @@ class tensor(AbstractTensor):
         Create a tensor object from a numpy array.
         :type arr: Numpy array to convert to a tensor.
         :type use_gpu: Indicates whether to create a numpy or cupy tensor.
-
         """
         super().__init__(arr, use_gpu)
 
