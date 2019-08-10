@@ -28,8 +28,8 @@ def eval_func(data, label):
 
 def test_func(data, label):
 
-    for e in range(5):
-        batch_size = 4
+    for e in range(10):
+        batch_size = 24
         for i in range(0, data.shape[0], batch_size):
 
             target = tensor(label[i:batch_size+i])
@@ -43,14 +43,14 @@ def test_func(data, label):
                 # mse.to_gpu()
 
                 r = mse([d, target])
-                print(np.sum(r.numpy))
+                print(np.sum(r.numpy) / batch_size)
 
             r.backward()
             optimizer.optimize(tape)
 
 
 edl.init_easydl(True)
-optimizer = Sgd(learning_rate=0.03, momentum=0.1)
+optimizer = Sgd(learning_rate=0.08, momentum=0.1)
 
 l = Dense(784, 128)
 #l.to_gpu()

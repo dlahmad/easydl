@@ -24,7 +24,7 @@ class Softmax(Activation):
 
         exp = self.np.exp(inp - v_max)  # f
 
-        exp_sum = (np.dot(exp, add_ones) + self.eps).reshape((-1, 1))  # g and h=exp
+        exp_sum = (self.np.dot(exp, add_ones) + self.eps).reshape((-1, 1))  # g and h=exp
 
         sm = exp / exp_sum  # y
 

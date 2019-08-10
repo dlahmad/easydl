@@ -1,4 +1,3 @@
-from __future__ import annotations
 import numpy as np
 from typing import Union
 from .abstract_tensor import AbstractTensor
@@ -12,7 +11,7 @@ class tensor(AbstractTensor):
     def __init__(self, arr: np.ndarray, use_gpu=None):
         super().__init__(arr, use_gpu)
 
-    def base_op_two_args(self, op, other: Union[float, tensor], tmp_first: bool = False):
+    def base_op_two_args(self, op, other: Union[float, AbstractTensor], tmp_first: bool = False):
         if isinstance(other, (float, int)):
             constant = self.np.ones_like(self.numpy) * other
             tmp_tensor = Constant(constant)
@@ -23,25 +22,25 @@ class tensor(AbstractTensor):
         args = [tmp_tensor, self] if tmp_first else [self, tmp_tensor]
         return op()(args)
 
-    def __add__(self, other: Union[float, tensor]):
+    def __add__(self, other: Union[float, AbstractTensor]):
         return self.base_op_two_args(Add, other)
 
     def __radd__(self, other):
         return self.__add__(other)
 
-    def __sub__(self, other: Union[float, tensor]):
+    def __sub__(self, other: Union[float, AbstractTensor]):
         return self.base_op_two_args(Substract, other)
 
     def __rsub__(self, other):
         return self.__sub__(other)
 
-    def __mul__(self, other: Union[float, tensor]):
+    def __mul__(self, other: Union[float, AbstractTensor]):
         return self.base_op_two_args(Multiply, other)
 
     def __rmul__(self, other):
         return self.__rmul__(other)
 
-    def __truediv__(self, other: Union[float, tensor]):
+    def __truediv__(self, other: Union[float, AbstractTensor]):
         return self.base_op_two_args(Divide, other)
 
     def __rtruediv__(self, other):
