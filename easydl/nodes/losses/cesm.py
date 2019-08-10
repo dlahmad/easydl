@@ -1,4 +1,4 @@
-from typing import Union, List
+from typing import Union, List, Tuple
 
 import numpy as np
 
@@ -12,8 +12,10 @@ class CrossEntropySoftmax(Loss):
         check_arg_number(inputs, 2)
         check_equal_shape(inputs)
 
-    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int):
+    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int) -> \
+            Tuple[np.ndarray, Union[None, np.ndarray, List[np.ndarray]]]:
         pass
 
-    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size):
+    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size)\
+            -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         pass

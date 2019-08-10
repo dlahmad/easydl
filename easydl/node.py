@@ -11,19 +11,38 @@ from .util.input_check import check_and_return_batch_size
 
 
 class Node(AbstractNode):
+    """
+    Base object for all nodes.
+    """
 
     def __init__(self):
+        """
+        Creates a node object.
+        """
+
         super().__init__()
         self.propagates_gradient: bool = True
+        """Indicates if this node propagates gradients to earlier layers."""
+
         self.needs_input_check: bool = True
-        self.variables: Dict[str, np.ndarray] = {}
-        self.gradients: Dict[str, np.ndarray] = {}
-        self.optimizer_cache: Dict[str, np.ndarray] = {}
+        """If set to true the input_check method is called."""
+
         self.instances: Dict[AbstractTensor, Instance] = {}
+        """Contains the instances which 'passed' through this node."""
+
         self.tensor_obj = Config.tensor_obj
+        """Contains the class which can create tensor objects. This is a hack
+        to prevent circle dependencies."""
 
     def __call__(self, args: Union[AbstractTensor, List[AbstractTensor]]):
-        if self.needs_init and not self.built:
+        """
+        Overwrites the call operator and allows for the execution of node operations.
+        This method calls the forward method and creates the resulting tensor. It also
+        saves the particular forward pass to one particular instance.
+        :param args: Args provided to the node.
+        :return: Result tensor.
+        """
+        if not self.built:
             self.build()
             self.built = True
 
@@ -45,6 +64,11 @@ class Node(AbstractNode):
         return output
 
     def raw_backward(self, output_tensor: AbstractTensor, gradients: np.ndarray) -> None:
+        """
+        This method is executed internally to back-propagate and compute the gradients.
+        :param output_tensor: Base tensor to start from.
+        :param gradients: Base gradients to start from.
+        """
         if output_tensor not in self.instances:
             raise Exception('Could not find an instance which created this tensor!'
                             ' Did you use a tape to record the operations before calling "backwards"?')
@@ -72,7 +96,16 @@ class Node(AbstractNode):
             level_grads = new_level_grads
 
     @staticmethod
-    def _build_dynamic_graph(base_instance: Instance):
+    def _build_dynamic_graph(base_instance: Instance) -> Dict[int, List[Instance]]:
+        """
+        This method creates the dynamic backward graph based
+        on one starting instance. This hierarchy is used to compute
+        the backward pass and guarantees that all grads required from
+        later layers are always available to backward operation they
+        are needed in.
+        :param base_instance: Instance to start from.
+        :return: Hierarchical level graph for backwards iteration.
+        """
         hierarchy = {0: [base_instance]}
 
         level = 0
@@ -99,9 +132,21 @@ class Node(AbstractNode):
 
     @staticmethod
     def _tensor2numpy(inp: AbstractTensor) -> np.ndarray:
+        """
+        Converts a tensor to an numpy or cupy array.
+        :param inp: Tensor to convert.
+        :return: Numpy or cupy array.
+        """
         return inp.numpy
 
     def _numpy2tensor(self, inp: np.ndarray, set_origin=True) -> AbstractTensor:
+        """
+        Converts a numpy or cupy array to a tensor. This uses a slight hack to prevent
+        circle dependencies.
+        :param inp: Numpy or cupy array.
+        :param set_origin: Indicates whether to set this note as the tensor origin or not.
+        :return: Created tensor.
+        """
         tns = self.tensor_obj(inp)
 
         if set_origin:
@@ -111,6 +156,12 @@ class Node(AbstractNode):
 
     @staticmethod
     def _to_list(var):
+        """
+        Checks whether a variable is a list or not. If not is creates
+        a single element list containing the variable.
+        :param var: Variable to check.
+        :return: List which was passed or created.
+        """
         if not isinstance(var, list):
             return [var]
         return var

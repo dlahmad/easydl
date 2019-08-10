@@ -1,4 +1,4 @@
-from typing import Union, List
+from typing import Union, List, Tuple
 
 import numpy as np
 
@@ -17,9 +17,11 @@ class Substract(Node):
     def input_check(self, inputs: Union[np.ndarray, List[np.ndarray]]) -> None:
         check_arg_number(inputs, 2, self)
 
-    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int):
+    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int) -> \
+            Tuple[np.ndarray, Union[None, np.ndarray, List[np.ndarray]]]:
         return self.np.add(inputs[0], -inputs[1]), None
 
-    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size):
+    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size)\
+            -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         return gradients, -gradients
 

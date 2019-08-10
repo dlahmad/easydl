@@ -1,4 +1,4 @@
-from typing import Union, List
+from typing import Union, List, Tuple
 
 import numpy as np
 
@@ -12,7 +12,8 @@ class MSE(Loss):
         check_arg_number(inputs, 2)
         check_equal_shape(inputs)
 
-    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int):
+    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int) -> \
+            Tuple[np.ndarray, Union[None, np.ndarray, List[np.ndarray]]]:
         inp_0, inp_1 = inputs
 
         difference = inp_0 - inp_1
@@ -21,7 +22,8 @@ class MSE(Loss):
 
         return res, difference
 
-    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size):
+    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size)\
+            -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         difference = cache
         size = difference.size
         expand_shape = (1, ) * (difference.ndim-1)

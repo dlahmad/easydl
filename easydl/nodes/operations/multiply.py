@@ -1,4 +1,4 @@
-from typing import Union, List
+from typing import Union, List, Tuple
 
 import numpy as np
 
@@ -18,8 +18,10 @@ class Multiply(Node):
         check_arg_number(inputs, 2, self)
         check_equal_shape(inputs, self)
 
-    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int):
+    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int) -> \
+            Tuple[np.ndarray, Union[None, np.ndarray, List[np.ndarray]]]:
         return self.np.multiply(inputs[0], inputs[1]), inputs
 
-    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size):
+    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size)\
+            -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         return gradients * cache[1], gradients * cache[0]

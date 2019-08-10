@@ -9,11 +9,30 @@ from .util.input_check import check_equal_shape
 
 
 class tensor(AbstractTensor):
+    """
+    The tensor object ist used for computations. It wraps a numpy or cupy
+    array for node operations. If something is to be fed to a node make
+    it a tensor first.
+    """
 
-    def __init__(self, arr: np.ndarray, use_gpu=None):
+    def __init__(self, arr: np.ndarray, use_gpu: bool = None):
+        """
+        Create a tensor object from a numpy array.
+        :type arr: Numpy array to convert to a tensor.
+        :type use_gpu: Indicates whether to create a numpy or cupy tensor.
+
+        """
         super().__init__(arr, use_gpu)
 
     def base_op_two_args(self, op, other: Union[float, AbstractTensor], tmp_first: bool = False):
+        """
+        Creates a tensor from a constant if needed. It then applies the operation
+        specified and returns the resulting tensor.
+        :param op: Operation to execute.
+        :param other: Other input which either is a constant or a tensor of the same shape.
+        :param tmp_first: Indicates if 'other' was provided from the left or right side.
+        :return: Tensor resulting from the operation.
+        """
         if isinstance(other, (float, int)):
             constant = self.np.ones_like(self.numpy) * other
             tmp_tensor = Constant(constant)
