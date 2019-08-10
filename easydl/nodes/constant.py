@@ -1,5 +1,5 @@
 import numpy as np
-from easydl.abstract_tensor import AbstractTensor
+from ..abstract_tensor import AbstractTensor
 
 
 class Constant(AbstractTensor):
