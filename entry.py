@@ -5,9 +5,8 @@ import easydl as edl
 from easydl.nodes.activations import Sigmoid, Softmax, ReLu
 from easydl.nodes.layers import Dense
 from easydl.nodes.losses import MSE
-from easydl.optimizers.sgd import Sgd
-from easydl.tape import Tape
-from easydl.tensor import tensor
+from easydl.optimizers import Sgd
+from easydl import Tape, tensor
 
 
 def eval_func(data, label):
@@ -63,9 +62,9 @@ so = Softmax()
 mse = MSE()
 
 data_set = dataset.MNIST('./datasets/mnist', download=True)
-data = data_set.train_data.numpy()
+data = data_set.data.numpy()
 data = np.reshape(data, (data.shape[0], -1)) / 255.
-label = data_set.train_labels.numpy()
+label = data_set.targets.numpy()
 label_raw = np.zeros((label.shape[0], 10))
 label_raw[np.arange(label.shape[0]), label] = 1
 test_func(data[:5000], label_raw[:5000])
