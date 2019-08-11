@@ -3,7 +3,7 @@ import torchvision.datasets as dataset
 
 import easydl as edl
 from easydl.nodes.activations import Sigmoid, Softmax, ReLu
-from easydl.nodes.layers import Dense
+from easydl.nodes.layers import Dense, Conv2d
 from easydl.nodes.losses import MSE
 from easydl.optimizers import Sgd
 from easydl import Tape, tensor
@@ -49,8 +49,17 @@ def test_func(data, label):
             optimizer.optimize(tape)
 
 
-edl.init_easydl(True)
+edl.init_easydl(False)
 optimizer = Sgd(learning_rate=0.08, momentum=0.1)
+
+
+conv = Conv2d(10, 10, 3, 10, (3, 3), paddings=(1, 1))
+
+
+conv.build()
+
+z = np.ones((2, 10, 10, 3))
+conv.forward([z], 2)
 
 l = Dense(784, 128)
 #l.to_gpu()
