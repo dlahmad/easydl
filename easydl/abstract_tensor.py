@@ -1,4 +1,4 @@
-from typing import Union, List, Tuple
+from typing import Union, Sequence, Tuple
 
 import cupy as cp
 import numpy as np
@@ -61,7 +61,7 @@ class AbstractTensor(AbstractObject):
     def __call__(self, *args, **kwargs):
         pass
 
-    def backward(self, gradient: Union[np.ndarray, List[np.ndarray]] = None):
+    def backward(self, gradient: Union[np.ndarray, Sequence[np.ndarray]] = None):
         """
         Computes the gradients of all operations which led to the creation
         of the current tensor and where recorded by a tape. This method is

@@ -1,4 +1,4 @@
-from typing import Union, List, Dict
+from typing import Union, Sequence, Dict
 
 import numpy as np
 
@@ -34,7 +34,7 @@ class Node(AbstractNode):
         """Contains the class which can create tensor objects. This is a hack
         to prevent circle dependencies."""
 
-    def __call__(self, args: Union[AbstractTensor, List[AbstractTensor]]):
+    def __call__(self, args: Union[AbstractTensor, Sequence[AbstractTensor]]):
         """
         Overwrites the call operator and allows for the execution of node operations.
         This method calls the forward method and creates the resulting tensor. It also
@@ -96,7 +96,7 @@ class Node(AbstractNode):
             level_grads = new_level_grads
 
     @staticmethod
-    def _build_dynamic_graph(base_instance: Instance) -> Dict[int, List[Instance]]:
+    def _build_dynamic_graph(base_instance: Instance) -> Dict[int, Sequence[Instance]]:
         """
         This method creates the dynamic backward graph based
         on one starting instance. This hierarchy is used to compute

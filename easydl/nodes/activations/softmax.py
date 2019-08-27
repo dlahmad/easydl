@@ -1,23 +1,21 @@
-from typing import Union, List, Tuple
+from typing import Union, Sequence, Tuple
 
 import numpy as np
 
 from ..activation import Activation
 from ...util.input_check import check_arg_number
-from ...util.numerics import get_eps
 
 
 class Softmax(Activation):
 
     def __init__(self):
         super().__init__()
-        self.eps = get_eps()
 
-    def input_check(self, inputs: Union[np.ndarray, List[np.ndarray]]) -> None:
+    def input_check(self, inputs: Union[np.ndarray, Sequence[np.ndarray]]) -> None:
         check_arg_number(inputs, 1)
 
-    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int) -> \
-            Tuple[np.ndarray, Union[None, np.ndarray, List[np.ndarray]]]:
+    def forward(self, inputs: Union[np.ndarray, Sequence[np.ndarray]], batch_size: int) -> \
+            Tuple[np.ndarray, Union[None, np.ndarray, Sequence[np.ndarray]]]:
         # inputs x
 
         inp = inputs[0]
@@ -33,7 +31,7 @@ class Softmax(Activation):
 
         return sm, (exp, exp_sum, add_ones)
 
-    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size)\
+    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, Sequence[np.ndarray]], batch_size)\
             -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         exp, exp_sum, add_ones = cache
 

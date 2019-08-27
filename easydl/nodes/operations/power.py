@@ -1,4 +1,4 @@
-from typing import Union, List, Tuple
+from typing import Union, Sequence, Tuple
 
 import numpy as np
 
@@ -18,11 +18,11 @@ class Power(Node):
     def input_check(self, inputs: np.ndarray) -> None:
         check_arg_number(inputs, 1, self)
 
-    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int) -> \
-            Tuple[np.ndarray, Union[None, np.ndarray, List[np.ndarray]]]:
+    def forward(self, inputs: Union[np.ndarray, Sequence[np.ndarray]], batch_size: int) -> \
+            Tuple[np.ndarray, Union[None, np.ndarray, Sequence[np.ndarray]]]:
         return self.np.power(inputs[0], self.power)[0], inputs[0]
 
-    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size)\
+    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, Sequence[np.ndarray]], batch_size)\
             -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         return gradients * self.power * cache
 

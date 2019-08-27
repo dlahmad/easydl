@@ -1,4 +1,4 @@
-from typing import List, Union, Tuple
+from typing import Sequence, Union, Tuple
 from .abstract_tensor import AbstractTensor
 from .abstract_object import AbstractObject
 

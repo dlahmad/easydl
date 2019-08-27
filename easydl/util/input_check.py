@@ -1,4 +1,4 @@
-from typing import List, Union, Tuple
+from typing import Sequence, Union, Tuple
 
 import numpy as np
 
@@ -6,7 +6,7 @@ from .array import can_broadcast
 from ..abstract_node import AbstractNode
 
 
-def check_arg_number(inputs: Union[np.ndarray, List[np.ndarray], Tuple[np.ndarray]],
+def check_arg_number(inputs: Union[np.ndarray, Sequence[np.ndarray], Tuple[np.ndarray]],
                      arg_number: int, origin: AbstractNode = None):
     if isinstance(inputs, (list, tuple)) and not len(inputs) == arg_number\
             or not isinstance(inputs, (list, tuple)) and not arg_number == 1:
@@ -30,7 +30,7 @@ def check_arg_shape(inp: np.ndarray, shape: Tuple[int], origin: AbstractNode = N
         raise Exception(message)
 
 
-def check_and_return_batch_size(inp: List[np.ndarray]):
+def check_and_return_batch_size(inp: Sequence[np.ndarray]):
     ref_size = inp[0].shape[0]
 
     for arr in inp:
@@ -40,7 +40,7 @@ def check_and_return_batch_size(inp: List[np.ndarray]):
     return ref_size
 
 
-def check_equal_shape(inputs: List[np.ndarray], origin: AbstractNode = None):
+def check_equal_shape(inputs: Sequence[np.ndarray], origin: AbstractNode = None):
     reference_shape = inputs[0].shape
 
     for inp in inputs:
