@@ -15,6 +15,9 @@ class Config:
     tensor_obj: object = None
     """Hack to prevent circular dependencies of tensor and node class."""
 
+    cuda_support: bool = True
+    """Indicates wether the cupy library could be imported or wether there was an error."""
+
     def __init__(self, use_gpu=False):
         self.temporary_use_gpu: bool = use_gpu
         self.backup_use_gpu: Union[bool, None] = None

@@ -1,7 +1,15 @@
 from typing import Union, List, Tuple
 
-import cupy as cp
+from .config import Config
+
 import numpy as np
+
+try:
+    import cupy as cp
+except ImportError:
+    cp = None
+    Config.cuda_support = False
+
 
 from .abstract_node import AbstractNode
 from .abstract_object import AbstractObject
@@ -23,7 +31,7 @@ class AbstractTensor(AbstractObject):
         super().__init__()
         if use_gpu is not None:
             self._use_gpu = use_gpu
-            self.np = cp if use_gpu else np
+            self.np = cp if use_gpu and Config.cuda_support else np
 
         self.numpy: np.ndarray = self.convert_to_device(arr)
         """

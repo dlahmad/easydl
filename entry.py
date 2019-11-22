@@ -49,9 +49,10 @@ def test_func(data, label):
             optimizer.optimize(tape)
 
 
-edl.init_easydl(False)
+edl.init_easydl(True)
 optimizer = Sgd(learning_rate=0.08, momentum=0.1)
 
+raise Exception("dfdsd")
 
 conv = Conv2d(10, 10, 3, 10, (3, 3), paddings=(1, 1))
 

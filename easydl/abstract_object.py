@@ -1,7 +1,13 @@
-import cupy as cp
-import numpy as np
 
 from .config import Config
+import numpy as np
+
+try:
+    import cupy as cp
+except ImportError:
+    cp = None
+    print("Warning: Could not import the cupy library! Falling back to cpu only mode!")
+    Config.cuda_support = False
 
 
 class AbstractObject:
@@ -12,10 +18,10 @@ class AbstractObject:
     """
 
     def __init__(self):
-        self._use_gpu: bool = Config.use_gpu
+        self._use_gpu: bool = Config.use_gpu and Config.cuda_support
         """Indicates whether the variables used in this object are on cpu or gpu."""
 
-        self.np = cp if Config.use_gpu else np
+        self.np = cp if Config.use_gpu and Config.cuda_support else np
         """Computational lib used for operations. It can be numpy or cupy depending
         on the device we are working on."""
 
@@ -25,7 +31,7 @@ class AbstractObject:
         Indicates whether the variables used in this object are on cpu or gpu.
         :return: True if variables are on a gpu.
         """
-        return self._use_gpu
+        return self._use_gpu and Config.cuda_support
 
     def to_cpu(self) -> None:
         """
@@ -52,6 +58,10 @@ class AbstractObject:
         """
         Transfers all variables from cpu to gpu variables.
         """
+
+        if not Config.cuda_support:
+            raise Exception('Could not transfer to gpu since there was a problem importing cupy!')
+
         if not self._use_gpu:
             self.np = cp
             for key, val in self.__dict__.items():
