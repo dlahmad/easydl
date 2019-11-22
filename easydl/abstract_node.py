@@ -1,8 +1,9 @@
-from typing import Union, List, Dict, Tuple
+from typing import Union, Sequence, Dict, Tuple
 
 import numpy as np
 
 from .abstract_object import AbstractObject
+from .util.numerics import get_eps
 
 
 class AbstractNode(AbstractObject):
@@ -10,6 +11,8 @@ class AbstractNode(AbstractObject):
     Implements abstract methods and properties needed for
     all node classes creating graphs.
     """
+
+    eps = get_eps()
 
     def __init__(self):
         super().__init__()
@@ -40,7 +43,7 @@ class AbstractNode(AbstractObject):
         """Contains the cache variables of the current optimizer for the
         variables of the current node."""
 
-    def input_check(self, inputs: Union[np.ndarray, List[np.ndarray]]) -> None:
+    def input_check(self, inputs: Union[np.ndarray, Sequence[np.ndarray]]) -> None:
         """
         This method can be overridden by subclasses and allows for the implementation
         of input checks before the inputs are passed to the forward method. In the case
@@ -59,8 +62,8 @@ class AbstractNode(AbstractObject):
         """
         pass
 
-    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int) -> \
-            Tuple[np.ndarray, Union[None, np.ndarray, List[np.ndarray]]]:
+    def forward(self, inputs: Union[np.ndarray, Sequence[np.ndarray]], batch_size: int) -> \
+            Tuple[np.ndarray, Union[None, np.ndarray, Sequence[np.ndarray]]]:
         """
         Implements the forward operations of the current node. This method is to be overridden
         by every node.
@@ -70,7 +73,7 @@ class AbstractNode(AbstractObject):
         """
         pass
 
-    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size)\
+    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, Sequence[np.ndarray]], batch_size)\
             -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         """
         Implements the backward operations of the current node. This method is to be overridden

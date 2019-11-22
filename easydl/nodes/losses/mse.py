@@ -1,4 +1,4 @@
-from typing import Union, List, Tuple
+from typing import Union, Sequence, Tuple
 
 import numpy as np
 
@@ -8,12 +8,12 @@ from ...util.input_check import check_arg_number, check_equal_shape
 
 class MSE(Loss):
 
-    def input_check(self, inputs: Union[np.ndarray, List[np.ndarray]]) -> None:
+    def input_check(self, inputs: Union[np.ndarray, Sequence[np.ndarray]]) -> None:
         check_arg_number(inputs, 2)
         check_equal_shape(inputs)
 
-    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int) -> \
-            Tuple[np.ndarray, Union[None, np.ndarray, List[np.ndarray]]]:
+    def forward(self, inputs: Union[np.ndarray, Sequence[np.ndarray]], batch_size: int) -> \
+            Tuple[np.ndarray, Union[None, np.ndarray, Sequence[np.ndarray]]]:
         inp_0, inp_1 = inputs
 
         difference = inp_0 - inp_1
@@ -22,7 +22,7 @@ class MSE(Loss):
 
         return res, difference
 
-    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size)\
+    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, Sequence[np.ndarray]], batch_size)\
             -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         difference = cache
         size = difference.size
