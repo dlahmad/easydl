@@ -16,6 +16,7 @@ class Conv2d(Layer):
         self.output_channels = output_channels
         self.img_shape = (self.input_channels, self.height, self.width)
         self.kernel_shape = kernel_shape
+        self.filter_shape = (self.input_channels, self.output_channels) + self.kernel_shape
         self.strides = strides
         self.paddings = paddings
         self.dilations = dilations
@@ -36,10 +37,20 @@ class Conv2d(Layer):
 
         images = inputs[0]
         filters = self.variables['w'].reshape((self.output_channels, -1)).T
-        im_col = self.im2col(images, batch_size).dot(filters)
+        col = self.im2col(images, batch_size)
+        im_col = col.dot(filters)
         new_images = im_col.reshape((batch_size, self.new_shape[0], self.new_shape[1], self.output_channels))
 
-        return new_images
+        return new_images, (filters, col, im_col.shape)
+
+    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size) ->\
+            Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
+        filters, output, raw_shape = cache
+        w_grad = output.T.dot(gradients.reshape(raw_shape))
+        w_grad = np.sum(w_grad, axis=1).reshape(self.filter_shape)
+
+
+        return None
 
     def compute_im2col_batch_indices(self, batch_size):
         b_indices = np.tile(self.im2col_indices, (batch_size, 1, 1, 1, 1, 1))

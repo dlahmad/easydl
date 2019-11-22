@@ -1,6 +1,8 @@
 import numpy as np
 import torchvision.datasets as dataset
-
+from PIL import Image
+import imageio
+import matplotlib.pyplot as plt
 import easydl as edl
 from easydl.nodes.activations import Sigmoid, Softmax, ReLu
 from easydl.nodes.layers import Dense, Conv2d
@@ -52,14 +54,22 @@ def test_func(data, label):
 edl.init_easydl(False)
 optimizer = Sgd(learning_rate=0.08, momentum=0.1)
 
-
-conv = Conv2d(10, 10, 3, 10, (3, 3), paddings=(1, 1))
+base_filter = np.array([[0, 1, 0],
+                        [1, -4, 1],
+                        [0, 1, 0]])
+filters = np.tile(np.expand_dims(base_filter, 0), (4, 1, 1))
+filters = filters[np.newaxis, ...]
+conv = Conv2d(100, 100, 4, 1, (3, 3), paddings=(1, 1))
 
 
 conv.build()
+conv.variables['w'] = filters
 
-z = np.ones((2, 10, 10, 3))
-conv.forward([z], 2)
+x = Image.open('/home/vedaevolution/Downloads/img.png')
+x = np.expand_dims(np.array(x.resize((100, 100))), 0)
+res, cache = conv.forward([x], 1)
+conv.backward(np.ones_like(res), cache, 1)
+plt.imshow(res[0, ..., 0], cmap='gray')
 
 l = Dense(784, 128)
 #l.to_gpu()
