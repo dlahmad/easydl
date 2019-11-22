@@ -1,4 +1,4 @@
-from typing import Union, List, Tuple
+from typing import Union, Sequence, Tuple
 
 import numpy as np
 
@@ -17,11 +17,11 @@ class Dense(Layer):
         self.variables['w'] = self.init_variable(self.input_dim, self.output_dim)
         self.variables['b'] = self.init_variable(self.output_dim)
 
-    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int) -> \
-            Tuple[np.ndarray, Union[None, np.ndarray, List[np.ndarray]]]:
+    def forward(self, inputs: Union[np.ndarray, Sequence[np.ndarray]], batch_size: int) -> \
+            Tuple[np.ndarray, Union[None, np.ndarray, Sequence[np.ndarray]]]:
         return self.np.dot(inputs[0], self.variables['w']) + self.variables['b'], inputs[0]
 
-    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, List[np.ndarray]], batch_size)\
+    def backward(self, gradients: np.ndarray, cache: Union[None, np.ndarray, Sequence[np.ndarray]], batch_size)\
             -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         inp = cache
         propagating_gradient = self.np.dot(gradients, self.variables['w'].T)

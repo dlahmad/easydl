@@ -1,4 +1,4 @@
-from typing import List, Union, Tuple
+from typing import Sequence, Union, Tuple
 
 import numpy as np
 
@@ -32,8 +32,8 @@ class Conv2d(Layer):
             self.init_variable(self.output_channels, self.input_channels
                                , self.kernel_shape[0], self.kernel_shape[1])
 
-    def forward(self, inputs: Union[np.ndarray, List[np.ndarray]], batch_size: int) -> \
-            Tuple[np.ndarray, Union[None, np.ndarray, List[np.ndarray]]]:
+    def forward(self, inputs: Union[np.ndarray, Sequence[np.ndarray]], batch_size: int) -> \
+            Tuple[np.ndarray, Union[None, np.ndarray, Sequence[np.ndarray]]]:
 
         images = inputs[0]
         filters = self.variables['w'].reshape((self.output_channels, -1)).T

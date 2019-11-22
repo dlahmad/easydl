@@ -1,4 +1,4 @@
-from typing import List
+from typing import Sequence
 
 import numpy as np
 
@@ -10,7 +10,7 @@ class Initializer(AbstractObject):
     This is the base class for initializer for node variables.
     """
 
-    def init_variable(self, size: List[int]) -> np.ndarray:
+    def init_variable(self, size: Sequence[int]) -> np.ndarray:
         """
         This method is to be overridden by the concrete initializer implementation.
         It creates a numpy or cupy array with the specified size.
